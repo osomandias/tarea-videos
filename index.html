@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADA | AIWIS - VIBE CODING</title>
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --bg-body: #141414;
+            --bg-card: #1f1f1f;
+            --bg-header: rgba(20, 20, 20, 0.95);
+            --primary: #e50914; /* Rojo tipo Netflix o ADA */
+            --accent: #6200ea; /* Morado Tech */
+            --text-main: #ffffff;
+            --text-secondary: #b3b3b3;
+            --success: #46d369;
+            --transition: all 0.3s ease;
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            padding-top: 80px; /* Espacio para el header fijo */
+        }
+
+        /* --- HEADER / DASHBOARD --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background-color: var(--bg-header);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4%;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+        }
+
+        .course-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .course-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 250px;
+            text-align: right;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 3px;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.7);
+        }
+
+        /* --- MAIN CONTAINER (GRID) --- */
+        main {
+            padding: 40px 4%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* --- CARD DESIGN --- */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid transparent;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-color: #444;
+        }
+
+        /* Video Area */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Card Content */
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Actions */
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-material {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .btn-material:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-quiz {
+            background-color: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-quiz:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        /* Toggle Check */
+        .status-control {
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Custom Toggle Switch styling */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header {
+                height: auto;
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            body {
+                padding-top: 130px;
+            }
+
+            .brand-container {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .progress-container {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / DASHBOARD -->
+    <header>
+        <div class="brand-container">
+            <div class="logo">ADA</div>
+            <div class="course-info">
+                <span class="course-title">AIWIS - VIBE CODING</span>
+                <span class="course-subtitle">Google AI Studio</span>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <span class="progress-text" id="progress-text">0 de 6 clases completadas</span>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main>
+        <h2 class="section-title">Módulos del Curso</h2>
+        
+        <div class="cards-grid">
+            
+            <!-- TARJETA 1 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <!-- Placeholder de YouTube: Intro a AI Studio -->
+                    <iframe src="https://drive.google.com/file/d/1q2fMr0h2v2UBKpP7x1chZhmreFlqqv44/view" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">1. Introducción al Ecosistema AIWIS</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase1.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz1.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- TARJETA 2 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <iframe src="https://drive.google.com/file/d/1YFYTyYZPqwyp-JQcH7K0zjC67T2IAQRl/view" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">2. Configurando Google AI Studio</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase2.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz2.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- TARJETA 3 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <iframe src="https://drive.google.com/file/d/1xkIpcqEdrvweVWc1LxIBH-itUMH3cTbT/view" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">3. Prompt Engineering Avanzado</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase3.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz3.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- TARJETA 4 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <iframe src="https://drive.google.com/file/d/154vEwzpDlYzP-Rc_maxIKJFMEi_-1oyA/view?usp=sharing" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">4. Vibe Coding: Flujos de Trabajo</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase4.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz4.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- TARJETA 5 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/jZq5H6wPq9E" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">5. Integración con APIs de Gemini</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase5.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz5.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <!-- TARJETA 6 -->
+            <article class="card">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/Vn_0rY7z7rE" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">6. Proyecto Final y Despliegue</h3>
+                    <div class="card-actions">
+                        <a href="./material-clase6.html" class="btn btn-material" target="_blank">📄 Lectura</a>
+                        <a href="./quiz6.html" class="btn btn-quiz" target="_blank">⚡ Quiz</a>
+                    </div>
+                    <div class="status-control">
+                        <span class="status-label">Marcar como vista</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="class-toggle" onchange="updateProgress()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- SCRIPT / JAVASCRIPT -->
+    <script>
+        // Esperamos a que el DOM cargue
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProgress(); // Cargar progreso guardado si existe
+            updateProgress(); // Calcular estado inicial
+        });
+
+        const toggles = document.querySelectorAll('.class-toggle');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        function updateProgress() {
+            const totalClasses = toggles.length;
+            let completedClasses = 0;
+
+            // Contar cuántos checkboxes están marcados y guardar estado
+            const statusArray = [];
+            
+            toggles.forEach((toggle, index) => {
+                if (toggle.checked) {
+                    completedClasses++;
+                }
+                // Guardamos el estado true/false en un array
+                statusArray.push(toggle.checked);
+            });
+
+            // Guardar en LocalStorage para persistencia
+            localStorage.setItem('ada_course_progress', JSON.stringify(statusArray));
+
+            // Calcular porcentaje
+            const percentage = (completedClasses / totalClasses) * 100;
+
+            // Actualizar DOM
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${completedClasses} de ${totalClasses} clases completadas`;
+
+            // Opcional: Cambiar color de la barra si se completa al 100%
+            if (percentage === 100) {
+                progressBar.style.backgroundColor = 'var(--success)';
+            }
+        }
+
+        // Función para leer el LocalStorage al abrir la página
+        function loadProgress() {
+            const savedProgress = JSON.parse(localStorage.getItem('ada_course_progress'));
+            
+            if (savedProgress && savedProgress.length === toggles.length) {
+                toggles.forEach((toggle, index) => {
+                    toggle.checked = savedProgress[index];
+                });
+            }
+        }
+    </script>
+</body>
+</html>
